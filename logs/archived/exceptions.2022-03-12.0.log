@@ -1,0 +1,30 @@
+2022-03-12 23:51:37 [main] ERROR o.e.n.e.NoticeAPIException - E1002#Recipient's name cannot be blank.
+2022-03-12 23:51:37 [main] ERROR o.e.n.e.NoticeAPIException - E1003#Recipient's address line 1 and 2 cannot be blank.
+2022-03-12 23:51:37 [main] ERROR o.e.n.e.NoticeAPIException - E1002#Recipient's name cannot be blank.
+2022-03-12 23:51:51 [main] ERROR o.e.n.e.NoticeAPIException - E1004#Merge field contains mismatched data type. [regdate is not a valid date field with value 2022-13-09 23:00:00, validityperiod is not a numeric field.]
+2022-03-12 23:51:51 [main] ERROR o.e.n.e.NoticeAPIException - Failed as expected. org.eservice.notice.exceptions.NoticeAPIException: E1004#Merge field contains mismatched data type. [regdate is not a valid date field with value 2022-13-09 23:00:00, validityperiod is not a numeric field.]
+	at org.eservice.notice.component.NoticeAPI.populateMergeFields(NoticeAPI.java:367)
+	at org.eservice.notice.testsuites.GenerateNewNoticeTestCase.simpleFieldsExceptionFlowA(GenerateNewNoticeTestCase.java:85)
+	at org.eservice.notice.component.ApplicationStartupTask.run(ApplicationStartupTask.java:54)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:777)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:761)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:310)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1312)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1301)
+	at org.eservice.notice.NoticesMicroserviceApps.main(NoticesMicroserviceApps.java:17)
+
+2022-03-12 23:57:45 [main] ERROR o.e.n.e.NoticeAPIException - E1002#Recipient's name cannot be blank.
+2022-03-12 23:57:45 [main] ERROR o.e.n.e.NoticeAPIException - E1003#Recipient's address line 1 and 2 cannot be blank.
+2022-03-12 23:57:45 [main] ERROR o.e.n.e.NoticeAPIException - E1002#Recipient's name cannot be blank.
+2022-03-12 23:58:00 [main] ERROR o.e.n.e.NoticeAPIException - E1004#Merge field contains mismatched data type for notice id # UC0101N001. [regdate is not a valid date field with value 2022-13-09 23:00:00, validityperiod is not a numeric field.]
+2022-03-12 23:58:00 [main] ERROR o.e.n.e.NoticeAPIException - Failed as expected. org.eservice.notice.exceptions.NoticeAPIException: E1004#Merge field contains mismatched data type for notice id # UC0101N001. [regdate is not a valid date field with value 2022-13-09 23:00:00, validityperiod is not a numeric field.]
+	at org.eservice.notice.component.NoticeAPI.populateMergeFields(NoticeAPI.java:367)
+	at org.eservice.notice.testsuites.GenerateNewNoticeTestCase.simpleFieldsExceptionFlowA(GenerateNewNoticeTestCase.java:85)
+	at org.eservice.notice.component.ApplicationStartupTask.run(ApplicationStartupTask.java:54)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:777)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:761)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:310)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1312)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1301)
+	at org.eservice.notice.NoticesMicroserviceApps.main(NoticesMicroserviceApps.java:17)
+

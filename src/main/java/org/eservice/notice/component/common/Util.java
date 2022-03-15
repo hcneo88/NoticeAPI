@@ -1,0 +1,59 @@
+package org.eservice.notice.component.common;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class Util {
+    @Autowired
+    DataSource dataSource;
+    
+    public String getConnectionPoolingClass() {
+        return dataSource.getClass().getName();
+    }
+
+    public String generateID() {
+      
+        Date dNow = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat("yyyyMMddHHmmss");
+        String datetime = ft.format(dNow); 
+        
+        int randomNumber = new Random().nextInt(99999) ;
+        if( randomNumber < 10000 ) randomNumber = randomNumber + 10000;
+        
+        int checkDigit = ((randomNumber * 4) % 25 )  + 65 ;
+        String checkAlpha = Character.toString ((char) checkDigit);  
+        String idString =  datetime  + String.valueOf(randomNumber) + checkAlpha ;
+        //Long id = Long.parseLong(idString) ;
+        return idString ; 
+
+    }
+
+    public String generateRandomDateString() {
+
+        Random rnd = new Random() ;
+
+        int year = rnd.nextInt(9) + 2021 ;
+        int month = rnd.nextInt(11) + 1 ;
+        int day = rnd.nextInt(27) + 1 ;
+
+        String mString = String.valueOf(month) ;
+        String dString = String.valueOf(day) ;
+        if (month < 10)  
+            mString = "0".concat(mString) ;
+        
+        if (day < 10)
+            dString = "0".concat(dString) ;
+
+
+
+
+        return String.valueOf(year).concat("-").concat(mString).concat("-").concat(dString) ;
+    }
+}

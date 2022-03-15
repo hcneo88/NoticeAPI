@@ -1,0 +1,39 @@
+version: '3'
+
+services: 
+  oracle-db:  
+    image: larmic/oracle-xe
+    ports:
+      - 1521:1521
+      - 5500:5500
+    environment:
+    - processes=200
+    - DATABASES=appstore
+    - ORACLE_PWD=manager
+    volumes:
+    - d:/data/DB/oracle11g:/opt/oracle/oradata 
+  #  - d:/data/DB/oracle11g:/u01/app/oracle
+
+# Reference: https://hub.docker.com/r/larmic/oracle-xe
+# Oracle SID : xe
+# Sys/System password : oracle
+# username: integrationtest, pwd:app
+# ALTER TABLESPACE temp ADD TEMPFILE '/opt/oracle/product/18c/dbhomeXE/dbs/temp01.dbf' SIZE  64M;
+# grant create session to integrationtest;
+# GRANT RESOURCE to integrationtest;
+# GRANT CREATE VIEW TO integrationtest;
+# alter user integrationtest quota unlimited on system;
+# connect to jdbc:oracle:thin:@localhost:1521:XE
+
+#Spring boot settings 
+# Oracle settings
+#spring.datasource.url=jdbc:oracle:thin:@localhost:1521:xe
+#spring.datasource.username=system
+#spring.datasource.password=password
+#spring.datasource.driver-class-oracle.jdbc.driver.OracleDriver
+
+# HikariCP settings
+# spring.datasource.hikari.*
+#spring.datasource.hikari.connection-timeout=60000
+#spring.datasource.hikari.maximum-pool-size=5
+

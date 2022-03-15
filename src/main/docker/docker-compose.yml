@@ -1,0 +1,23 @@
+# Need to pre-create a volume in order persist data outside the container
+# ie run docker volume create --name=data
+# the 'data' is referenced in the volumes property
+
+version: '3'
+ 
+services:
+  db:
+    image: mysql:8.0
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: appstore
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: dbuserpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - d:/data/db/mysql:/var/lib/mysql
+
+#volumes:
+#  data:
+#    external: true

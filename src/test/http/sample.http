@@ -1,0 +1,151 @@
+### Step 1A - Simulate Angular generation of its 32 Byte AES Key and encrypt 
+#it with Server RSA public key. Hardcoded client AES key : A6Ojys78BoZMoGTSoxZSRYiB4ID6UYOg
+GET http://localhost:8088/crypto/angular/rsaencrypted/clientkey
+
+# Get the above result and enter the Client-rKey into the header of step 2 
+# ----------------------------------------------------------------------------------------------
+
+### Step 1B - Simulate Angular encrypting the user password (hard coded as pass1234) with the 
+# server RSA public key
+GET http://localhost:8088/crypto/angular/aesencrypted/password
+
+# ----------------------------------------------------------------------------------------------
+
+### Step 2 - Authenticate user
+# IMPORTANT the Client-rKey MUST BE A VALID RSA encrypted 332 byte AES Key which 
+# Angular client generated.  The server public RSA key is used to encrypt it.  
+# Refers to step 1 on how to generate it (the Client-rKey)
+
+POST http://localhost:8088/api/authenticate 
+Content-Type: application/json 
+# To regenerate using Step 1A for the Client-rKey and Step 1B for the user password whenever there is 
+# a change in the server RSA keypair.
+Client-rKey: MIwD9JrQGYnZDkcA73EwAsRLblAZOUdOqr4Kvl4WOLqkB963kuiN7O5hG0MQaCyqdehFCF59UBVRh3N1k+g5atzBKpvgqN8F8npiclqgDAQFPspoyAgjNB6vxsFlwToERyRM5MGiDuWu2B7XpAcfOn8Kfw7LcTfJ+40TkkrxwcVm/c9sttgtoxBZO08i5CMT2uzXL/0QJeWwJmkhYSQn0tZ9e2eDwSiIR4IrKEYgeaxu68kWEhli/CbqeoCo6+KDirHuslixxIyVYOrNKl22tJSmmS0ONxW5gjxJtCXF9ktWv8hZjnRiulM3x8Gkblzj7p+W+hDMCaLk2rzHDh70EA== 
+   
+    {
+     "username":"hcneo",
+     "password":"FRkKl4giOm7Ls4BDKoE8yKo1V5z/xqFPDsXyuRZ2MKbDgtdKczQrDsTpTjqTM9ctbLtBpZdSm3z1U8OpFaSkyavgXlxXuAg9kIn0Jo584uQoHM+/+t8AWhboUUrCm856PZ1yQa9+cS824TwtdN3VAYGKzrPszDn7MURDf9qBzj73L7pt/hHlWGspvePCSgdiZlSYeQiZxREyPCEPKmKqDfv+uwM1lQX7H9lSWNs9eiFsU34PC9T7ANxusvybTKHg4xqDcILwW7lDvOTsa59acyK1yl1QERegUv2lsy+nvllaF0vR3N00tUil1G4RWvstkVytpu8XE0TtU2P1ABbpPg=="
+     
+    }
+
+# Take the generated headers for JWT Authorization and the Client-aKey (angular AES key encrypted by
+# server AES key) and copy them to any authenicated API call. In summary, the Client-aKey is the client encryption key that is encrypted by
+# the server AES key.  
+
+# ----------------------------------------------------------------------------------------------
+
+### Step 3 - Simulate Angular encrypting data using its generated ClientAESKey (Client-eKey) from Step 1
+# Hard coded data = {"name":"tan ah keow", "age":"50"}
+POST http://localhost:8088/crypto/angular/aesencrypted/data
+Content-Type: application/json
+
+{
+    "clientAESKey" : "A6Ojys78BoZMoGTSoxZSRYiB4ID6UYOg"
+}
+
+### ----------------------------------------------------------------------------------------------
+
+###Step 4 - Simulate Angular sending data encrypted  with its AES key (Client-eKey) to the server 
+# over unauthenticated API.  Take the 'client encrypted data' from step 3. The return result
+# "BGxs6f+s0ld1pQbf97X2u34DD7mWDrJ7XMvP+x8DPcD5DdHZmA6isBUUGPdHacmS" is based on hardcoded json in 
+# the format {"name":"tan ah kao", "age":"50"}. 
+# IMPORTANT NOTE:  Unauthenticated API will NOT hit the JwtAuthorizationFiler, but WILL
+# the Transmogifer filter. 
+# Unauthenticated API will not get a JWT token.  Hence, no need to specify Authorization Header, 
+# but will NEED to specify the Client-aKey in the header.
+# TC-1 - HTTP header contains a valid JWT TOken or Client-aKey.  Returns decrypted json
+# TC-2 - No valid HTTP header as per above.  Console mesage "uanble to ...."
+POST http://localhost:8088/crypto/angular/senddata
+Content-Type: application/json
+Client-aKey: vp8QKbyYO+CaWY3Ai8DTMuqTqLSrpVa/GFDkwXHPd3nMDZnEhqLB2WXO2obQtrrG
+
+{
+    "encrypted-data":"BGxs6f+s0ld1pQbf97X2u34DD7mWDrJ7XMvP+x8DPcD5DdHZmA6isBUUGPdHacmS"
+    
+}
+
+# ----------------------------------------------------------------------------------------------
+###Step 5 - Simulate Angular receiving encrypted data from the serverdecrypting data encrypted 
+# with its AES key
+# TC-1 : Encrypted message is return with json field name "encrypted_data"
+# TC-2 : Change Client-aKey to some other values -> No encryption.  
+GET http://localhost:8088/crypto/angular/receivedata
+Content-Type: application/json
+Client-aKey: vp8QKbyYO+CaWY3Ai8DTMuqTqLSrpVa/GFDkwXHPd3nMDZnEhqLB2WXO2obQtrrG
+
+{
+}
+
+
+
+# -----------------------------
+# EXCEPTIONAL FLOWS
+# -----------------------------
+
+### Case with invalid password (Pass123412)
+POST http://localhost:8088/api/authenticate 
+Content-Type: application/json
+Client-rKey: FtHG0w5d6yfLbSOS5uq3n3AjxksbYRVae0hIOgeBVOD5GKpMGLQq8ZIQhQN7o4r6UxtRyCXdrXoY34Q6ngXZh+JSgC09G/hqf4qT3ghvTcDdoZXWs0Z8QB1Y/j5yv9IE4uxMsRq1ca7RyXtZ9bgBDgqrG0ZPyuTS0xvnXrjvA1QvEx9rQ3TMkgTIdI8DHFogCwKmnPHZYOkcGVWFgAL5xId8LFXWDagn7h7xBZwMaxSFTe3G2S4iHgFQxBYLPH39tPPsQP7eD2rmiFw59Hpbi7tbcFDnfxmfM//gE5A6ZuohctZ5KkK6Bg/cittOF61dzS1ssjpO902YwRR9MhnhrQ== 
+
+    { "username": "hcneo",
+      "password": "JGy64SfbyG3opRYUtk+9F4suqzNMmorH8GTcz52uIZnhu3KoAvy07QgwqzBLuc3WDJyMC5JgUI9PPtPb3JJB5CUGAJWE9/VAeQDj2RVjoYUBDZz+dRa1TJY5UKaDioTKTQm7BYqo19aEk6TfbswtbFxR2OwdzCOmM0+F9JpQaTi/MQsZonYqVJDMmmpPLFFkBMoNHJQw2UeNFCZBesbpd3Z5rQA0YF+/8cAgygGZAw7elah6hbDeiVUWL+WxrpoVMCL8V1icm2Uz19Q1A86hFPftZWlAkKG2XWK41Dri0fn70dr3exwFDBZkoIkt9OoHTt5/0A14Lyoh4pSjxMv5Ww=="
+        
+    }
+
+# "password": "1B/UJB4X0pCe2RFyFUldtjk4OHBFpM2EmqHwfLzumjAXS2VWsE6W2aqBTnkkh76kMBNP/6qpjLzgPNlg2COXGtR21i8CDAUDuIslmLmD5jzU0uhbkHaOb2Q7Zt8YZHEu18je6DRu4XE6lI1b/wawSB36v8IYr9zdG+eC9wCvCoyLPgtSJwjXNsX5UTPUVbhOpBwfBxjeMNTHISJ8m0YKR2Aix95DvZDhEmcOL1Ql+avvud5WJ2SENOIRpHXk+unv62eE4y+eZ1qzjt2SfqaYGBdEYJng7ymBK6VUdOKc+2D3ITmEYXvcKRdcK0T0CAIfhBGDtNbMimb09Lz7V91U1bw=="
+# 
+#
+    
+
+###### ---------------------- Proxy Functions ---------------------------------
+### Get server public key
+Get http://localhost:8088/access/getconfig
+
+### Public API
+GET http://localhost:8088/api/public
+
+### ------------------------- Authenticated API --------------------------------
+### getmenu
+GET http://localhost:8088/access/getmenu
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJXZWJTb2Z0IiwiYXVkIjoiMS4wIiwic3ViIjoiaGNuZW8iLCJleHAiOjE2MDEyNzIyNDYsInJvbCI6WyJEZWZhdWx0IiwiRmluYW5jZSBBZG1pbiIsIkZpbmFuY2UgTWFuYWdlciJdLCJDbGllbnQtZUtleSI6InZwOFFLYnlZTytDYVdZM0FpOERUTXVxVHFMU3JwVmEvR0ZEa3dYSFBkM25NRFpuRWhxTEIyV1hPMm9iUXRyckciLCJDU1JGLVRva2VuIjoiV3RWb1dEQndaemFnIn0.rLbh8x4KXkZFsh-m_o9-8uxa4ZoaOjsz3AfGVObHEyWO-diy3TgWncSpsJbO38SmncweZNfNFvJ4cwPLZUzpFA
+
+
+### Private API: hcneo
+GET http://localhost:8088/api/private
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJXZWJTb2Z0IiwiYXVkIjoiMS4wIiwic3ViIjoiaGNuZW8iLCJleHAiOjE2MDA4NTQwNTgsInJvbCI6WyJEZWZhdWx0IiwiRmluYW5jZSBBZG1pbiIsIkZpbmFuY2UgTWFuYWdlciJdLCJja2V5IjoiT2N4bGVZWnhvWVZtVWV1aitHWUV1azJlQjU4Q05CVGJyb0Vzb3FqMHhSUFhXMHpkZEJHbSt0ck5EbitwckxQUSJ9.oOd5p4ve2XoFfXMp9bdiPuKBSqA98aYenMojCtSlbpnTPlVaKU7z4nHS0yvAUCZ9Kkq4YyIN8wtpkm2iR-B7LA
+
+
+
+
+### Without JWT - Will fail
+GET http://localhost:8088/api/private
+
+# ---------------------------------------------------------------------
+
+### Salt Encodeing and Decoding
+# Step A: Encoding
+POST http://localhost:8088/crypto/salt/encoding 
+Content-Type: application/json 
+Client-aKey: vp8QKbyYO+CaWY3Ai8DTMuqTqLSrpVa/GFDkwXHPd3nMDZnEhqLB2WXO2obQtrrG
+
+{
+    "text":"dbuserpass"
+}
+
+###
+# Step B: Decoding
+POST http://localhost:8088/crypto/salt/decoding 
+Content-Type: application/json 
+Client-aKey: vp8QKbyYO+CaWY3Ai8DTMuqTqLSrpVa/GFDkwXHPd3nMDZnEhqLB2WXO2obQtrrG
+
+
+
+{
+    "encodedString":"6hgAdQhTG5Ku08UT9FABRQ=="
+}
+
+# ---------------------------------------------------------------------
+
+
+#### Init config in DB
+GET http://localhost:8088/vault/config/init
