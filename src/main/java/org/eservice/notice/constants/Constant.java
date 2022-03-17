@@ -12,4 +12,5 @@ public class Constant {
     public static final String SIGNATORY_PREFIX = "/SI-" ;
 
     public static final int QRCODE_DEFAULTSIZE = 65; 
+
 }

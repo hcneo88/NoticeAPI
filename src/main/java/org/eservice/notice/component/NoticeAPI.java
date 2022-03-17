@@ -89,6 +89,7 @@ public class NoticeAPI {
     String letterHeadPath ;
     String docPath ;
     String signatoryPath ;
+    String generatedProgramPath ;
 
     List<String> mergeFieldErrors ;
     List<String> tableFieldErrors ;
@@ -105,6 +106,7 @@ public class NoticeAPI {
         letterHeadPath = templatePath + "/letterhead"  ;
         signatoryPath = templatePath + "/signatory" ;
         docPath = NoticeAPI.class.getResource("/instances").toURI().getPath(); 
+        generatedProgramPath = NoticeAPI.class.getResource("/generatedProgram").toURI().getPath();  
 
         mergeFieldErrors = new ArrayList<>();
         tableFieldErrors = new ArrayList<>();
