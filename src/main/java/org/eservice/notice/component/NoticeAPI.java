@@ -11,10 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.google.zxing.client.j2se.MatrixToImageConfig;
+
 import org.apache.commons.lang3.StringUtils;
 import org.docx4j.wml.JcEnumeration;
 import org.eservice.docxapi.DocXAPI;
 import org.eservice.docxapi.ImageField;
+import org.eservice.docxapi.QrCodeField;
 import org.eservice.docxapi.RecipientAddress;
 import org.eservice.docxapi.TextField;
 import org.eservice.notice.component.common.Util;
@@ -167,7 +170,7 @@ public class NoticeAPI {
         }
 
         this.recipientAddress = recipientAddress ;
-        String instanceId = commonService.generateID() ;
+        String instanceId = Util.generateID() ;
         this.recipientAddress.setTransactionId(instanceId);
         this.recipientAddress.setNoticeNumber(noticeNum.toString()) ;
         this.recipientAddress.setNoticeVersion(String.valueOf(dbNotice.getRevisionNo())); 
@@ -179,6 +182,8 @@ public class NoticeAPI {
         log.debug("Loaded template in createNotice() API for notice number:{}", noticeNum.toString() ) ;
     }
 
+    //VERY IMPORTANT: The first element in columnForOneRow MUST match the merge field name of the table in
+    //the MSWord template !  The first column is used to "identify the table".
     public void populateTableField(String tableName, Map<String, String> columnForOneRow) throws Exception {
 
         if (this.dbNotice == null || this.recipientAddress == null)   
@@ -218,14 +223,14 @@ public class NoticeAPI {
 
                             case 'N' :  if (! StringUtils.isNumeric(columnData)) {
                                            tableFieldErrorsCount++;
-                                           tableFieldErrors.add(String.valueOf(tableFieldErrorsCount) + ") " + noticeField.getFieldName() + " is not a numeric field.") ;
+                                           tableFieldErrors.add(String.valueOf(tableFieldErrorsCount) + ") " + noticeField.getFieldName() + " is not defined as a numeric field.") ;
                                         }
                                         break;
                             case 'F' :  try {
                                           Float.parseFloat(columnData);
                                         } catch (NumberFormatException e){
                                             tableFieldErrorsCount++ ;
-                                            tableFieldErrors.add(String.valueOf(tableFieldErrorsCount) + ") " + noticeField.getFieldName() + " is not a float field.");
+                                            tableFieldErrors.add(String.valueOf(tableFieldErrorsCount) + ") " + noticeField.getFieldName() + " is not defined as a float field.");
                                         }
                                         break;
                             case 'D' :  DateFormat sdf ;
@@ -238,7 +243,7 @@ public class NoticeAPI {
                                             sdf.parse(columnData);
                                         } catch (Exception e) {
                                             tableFieldErrorsCount++;
-                                            tableFieldErrors.add(String.valueOf(tableFieldErrorsCount) + ") " + noticeField.getFieldName() + " is not a valid date field with value " + columnData);
+                                            tableFieldErrors.add(String.valueOf(tableFieldErrorsCount) + ") " + noticeField.getFieldName() + " is not defined as a valid date field with value " + columnData);
                                         }
                                         break ;
                             default  :
@@ -279,12 +284,14 @@ public class NoticeAPI {
         List<String> fieldsDefinedInDB = new ArrayList<>();
         List<String> fieldsDefinedByUser = new ArrayList<>() ; 
 
-        for (String userField : textOrImageFields.keySet()) 
-            fieldsDefinedByUser.add(userField) ;
+        for (String userSuppliedField : textOrImageFields.keySet()) 
+            fieldsDefinedByUser.add(userSuppliedField) ;
 
         //Validate that all manandatory fields in cmnoticefields are defined
         for (int i = 0 ; i < noticeFieldsList.size(); i++) {
             CmNoticefields noticeField = noticeFieldsList.get(i) ; 
+            if (noticeField.getFieldTypeCd().charAt(0) == 'T') continue ;   //table, will be handled in populateTableFields
+            
             Object obj = textOrImageFields.get(noticeField.getFieldName()) ;
             fieldsDefinedInDB.add(noticeField.getFieldName()) ;
             if (obj == null) {
@@ -313,7 +320,7 @@ public class NoticeAPI {
                             case 'N' :  if (! StringUtils.isNumeric(text.getText())) {
                                            isValid = false ;
                                            mergeFieldErrorsCount ++ ;
-                                           mergeFieldErrors.add(String.valueOf(mergeFieldErrorsCount) + ") " + noticeField.getFieldName() + " is not a numeric field.") ;
+                                           mergeFieldErrors.add(String.valueOf(mergeFieldErrorsCount) + ") " + noticeField.getFieldName() + " is not defined as a numeric field.") ;
                                         }
                                         break;
                             case 'F' :  try {
@@ -321,7 +328,7 @@ public class NoticeAPI {
                                         } catch (NumberFormatException e){
                                             isValid = false ;
                                             mergeFieldErrorsCount ++;
-                                            mergeFieldErrors.add(String.valueOf(mergeFieldErrorsCount) + ") " + noticeField.getFieldName() + " is not a float field.");
+                                            mergeFieldErrors.add(String.valueOf(mergeFieldErrorsCount) + ") " + noticeField.getFieldName() + " is not defined as a float field.");
                                         }
                                         break;
                             case 'D' :  DateFormat sdf ;
@@ -354,12 +361,15 @@ public class NoticeAPI {
                     }
                 }
 
-                if (obj instanceof String) {   //QR code is expected
+                //if (obj instanceof String) {   //QR code is expected
+                if (obj instanceof QrCodeField) {
+                    
                     if (Boolean.FALSE.equals(noticeField.getFieldTypeCd().startsWith("Q"))) {   
                         mergeFieldErrors.add(noticeField.getFieldName() + " is not an QR code.") ;
                     } else {
                         Boolean isValidQR = true;
-                        String qrString = (String) obj ;
+                        QrCodeField qrCode = (QrCodeField) obj ;
+                        String qrString = qrCode.getQrCodeString() ;
                         char dataType =  noticeField.getFieldTypeCd().charAt(1) ;
                         switch (dataType) {
                             case 'S' :  break;
@@ -395,11 +405,14 @@ public class NoticeAPI {
                             default  :
                         }
                         if (Boolean.TRUE.equals(isValidQR)) {
-                            byte[] qrImage = docxAPI.createQRCode(qrString, 50, 50) ;
-                            imgFields.put(noticeField.getFieldName(), DocXAPI.createImageField(qrImage));
+                            //byte[] qrImage = DocXAPI.createQRCode(qrString, 50, 50) ;
+                            MatrixToImageConfig matrixConfig = new MatrixToImageConfig(DocXAPI.Colors.WHITE.getArgb(), DocXAPI.Colors.ORANGE.getArgb());
+                            imgFields.put(noticeField.getFieldName(), DocXAPI.createImageField(qrCode.generateQrCode(matrixConfig)));
                         }
                     } 
                 } //QR code
+
+                
             
             }  //Found merge field supplied by API user
         } // For merge field defined in NoticeFields 
@@ -429,6 +442,7 @@ public class NoticeAPI {
         try {
 
             Date instanceDate = new SimpleDateFormat("yyyy-MM-dd").parse(this.recipientAddress.getTransactionDate()); 
+            System.out.println("DATE:" + instanceDate) ;
             Timestamp instanceTimestamp = new Timestamp(instanceDate.getTime()) ;
             
             dbNoticeInstances.setInstanceId(this.getRecipientAddress().getTransactionId()) ;   //Auto created during createNotice API calls
@@ -577,19 +591,16 @@ public class NoticeAPI {
         
     }
 
-    public ByteArrayOutputStream generate() throws Exception {
+    public ByteArrayOutputStream generateNotice() throws Exception {
 
           
-        System.out.println("Here 1") ;
         String letterHeadId = dbNotice.getLetterheadId() ;
        
-        System.out.println("Here 2") ;
         if (Boolean.FALSE.equals(letterHeadId.equalsIgnoreCase("Z"))) {
             String letterHeadFilename =  letterHeadPath + Constant.LETTERHEAD_PREFIX + letterHeadId + ".docx" ;
             docxAPI.mergeHeaderFooter(letterHeadFilename);
         }
 
-        System.out.println("Here 3") ;
         String signatoryId = dbNotice.getSignatoryId() ;
         dbSignatory = signatoryRepo.findBySignatoryId(signatoryId) ;
         if (dbSignatory == null) {

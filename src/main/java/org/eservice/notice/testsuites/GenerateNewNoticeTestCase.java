@@ -59,7 +59,7 @@ public class GenerateNewNoticeTestCase {
             noticeAPI.createNotice(NoticeNumEnum.UC0101N001, recipientAddress) ;
             noticeAPI.populateMergeFields(textOrImageFields);
             noticeAPI.dbUploadFields() ;
-            noticeAPI.generate() ;
+            noticeAPI.generateNotice() ;
         } catch (Exception e) {
             throw new NoticeAPIException(e, "Happyday flow failed.") ;
 
@@ -82,7 +82,7 @@ public class GenerateNewNoticeTestCase {
             noticeAPI.createNotice(NoticeNumEnum.UC0101N001, recipientAddress) ;
             noticeAPI.populateMergeFields(textOrImageFields);
             noticeAPI.dbUploadFields() ;
-            noticeAPI.generate() ;
+            noticeAPI.generateNotice() ;
         } catch (Exception e) {
             throw new NoticeAPIException(e, "Failed as expected.") ;
         }
@@ -100,12 +100,12 @@ public class GenerateNewNoticeTestCase {
                 columnForOneRow.put("sku", Crypto.getRandString(8));
                 columnForOneRow.put("qty", String.valueOf((r+1)*2)); 
                 columnForOneRow.put("value", String.valueOf(7*((r+1)*1.5)));
-                columnForOneRow.put("validity", common.generateRandomDateString());
+                columnForOneRow.put("validity", Util.generateRandomDateString());
                 noticeAPI.populateTableField("TableA", columnForOneRow);
             }
             
             noticeAPI.dbUploadFields() ;
-            noticeAPI.generate() ;
+            noticeAPI.generateNotice() ;
         } catch (Exception e) {
             throw new NoticeAPIException(e, "Happyday flow failed.") ;
         }

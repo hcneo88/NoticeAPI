@@ -10,4 +10,6 @@ public class Constant {
     public static final String DOCUMENT_PREFIX = "/NT-" ;
     public static final String LETTERHEAD_PREFIX = "/LH-" ;
     public static final String SIGNATORY_PREFIX = "/SI-" ;
+
+    public static final int QRCODE_DEFAULTSIZE = 65; 
 }

@@ -1,7 +1,7 @@
 ### 
 # Simple Merge Field Test Case : To verify exception when error fields ("notdefind") or table fields are passed in
-# to template for merge fields not defined in database.  UC0101N001 does not have a table and 
-# thus contribute to teh error list.
+# to template for merge fields not defined in database.  UC0101N001 does not have a table field and 
+# thus contribute to the error list.
 POST http://localhost:8800/notice/generate/pdf
 Content-Type: application/json
 
@@ -27,7 +27,7 @@ Content-Type: application/json
         "notdefined"  : "not found in database"
 	},
 	"imageFields" :  {},
-    "qrTextFields" : {},
+    "qrCodeFields" : {},
 	"dataTables": {    
         "TableA" : [
             {
@@ -64,11 +64,14 @@ Content-Type: application/json
 		"validityperiod" : "30",
 		"apptdate" : "30 March 2022"
 	},
-	"imageFields" :  {},
-    "qrTextFields" : {},
+	"imageFields" :  {
+        "image": "iVBORw0KGgoAAAANSUhEUgAAACIAAAAdCAIAAABACSntAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARISURBVEhLzVZdaBxVFD53dmZ/ku1uVppsNWlD1TwULX1RjIqxMSbmQVLEPogSQSo+lfoi1CdRfBAqgiL6IlTBgFJRFKOYpBprDYI/JdFQK4au2k02a5xs0u7P7MzOXM+5d3Z2k52kC6L4cWdm77n3nO/83J9lnHP496G43+3huE+zaPC8mWg4qTG2bJinUuvH9u3EjjviD5qNnzd/1VMFrlIgrDkaobb/w4vzaXP2ke4DiUi9vAEYtzJ2MTc6sQIRTYqaSRrZeuZcZj4HEAu9fn5VSreGohvm6Jm/oC0MYUW2pmozq+efn81DWAU18N4lg3ObIhGPLwYmF0HVgGFY6CJ52QwNH/48C8EgQ7sK5Ir89HJR6DZmjIhPzGXnVhzQ0HJtwvY0pHbkq3S2qICKPxnpadpL82s06AN2Yb14/LvL0CpLUqUxnG1oqMKT6bWTC2UIB4T3KOHId3rRWDetmpUa+NBEBiJBtydR4TdEt6NhpmOPnNEh7K4WBEVn8r5dWjyoiY4H6hz9JnOpoNQliIPDwTS/HO70oyEVekam0mVbraoJ3x0WVKyP7un0BAI4mU1nLr92vkDrqj5Ko/LK7YmuKEl9wU4u6BOLNtQlgJhL5qmDyR0YykaYTmUEl0kkROUjFpoLJvTtCojt7LsEGGRLxpGZVYhQ3WvelfloT+TQ7pjblacPGWQPTi/lbQ0UYR1f2BzsmZ/e10WSrVba0FQGAkFh3+XgNm8P2W/1XSu7BDnC4O2F1fGUBSFPhGBgmB/0d7QG0FFyx4fmubnlH3UQK9gDR7WPB5L19ZU29ZL56Nc6tOLsKgd+TfuhvaFDe+JAJxnJ62ko5F/Wis/+gBs+IEUCHEr20weit7VHXUEdhr9YwrgZ7agqjc3jIfudfpGuqnxzNH0TixDCc0JkmcChAj1x/sItmC4prN0IJ35a+T5rg1YlQOAUw/qsP1ljFUAaHJGNPTGT/rOkAu1F0TBkroBlTg25lRRw9S+sl45/m8Mz2HWJ3hzKlSdvaulN7pB9D1407Oxy/o2fDbHwJSs2BoXyq72J7mhIaEkCl+a3K2VwMLfoStViBfbG+Mu911XVa0CjUo0PTmagRW6I6gzLuatLPSoWfl0aXQx2xtqiQle6iuOWNXmv4OAo9wIgyA67f+qPMuDCl5RCyPEgN8cHvHS5QXgIMOXwnhCePWiU4jGsF2+N3RgTN97mucLiWGr1k98rgCc9AUsi7om8+X5/e0xTazlpwLF9CahUyHXLuTOpPHVzhxA3kCBNDm+66RVxdHvDuLmch3siD3QnRFA+ahL7r2m5Pq6AjRm1xgd3u1I/KI/PLIGlQtnCqPGko1ay46o1dlCcj36u1eOxnijohXfv3tkW3LCfN4GlrhizuhEUF4qEacMd7eGOlo3XxhbAy+JspjDQGaPcbh03Vk/e2I3AklwllDpcZfL/6l/nP8Z/QgPwN19snj0qruAoAAAAAElFTkSuQmCC"
+    },
+    "qrCodeFields" : {
+        "qrtransactioncode" : "Hello World"
+    },
 	"dataTables": {}    
 }
-
 
 	
 
@@ -77,4 +80,64 @@ Content-Type: application/json
 GET http://localhost:8800/notice/regenerate/pdf?instanceId=2022031419212481903M
 
 
+###
+# ---------------------------------------------------
+# The following test case is to verify the following are generated in the template
+# (a) merge fields of different type (A) : String, Number, Float, Date
+# (b) image (I)
+# (c) Qr code (Q)
+# (d) Table data (T)
+POST http://localhost:8800/notice/generate/pdf
+Content-Type: application/json
 
+{
+	
+	"noticeNumber" : "UC0101N005",
+    "recipientAddress" : {
+        "recipientName" : "hcneo",
+        "addressType"   : "S", 
+        "blkHseNo"       : "205",
+        "floorNo"        : "06",
+        "unitNo"         : "900",
+        "buildingName"  : "abc",
+        "streetName"    : "Hougang Avenue 8",
+        "postalCd"       : "530302",
+        "transactionDate" : "2022-03-15"
+    },
+	"textFields": {
+		"stringfield":"This is a string field",
+        "numberfield":"999",
+        "floatfield":"999.99",
+        "datefield":"2022-03-19 10:10:10"
+    },
+	"imageFields" :  {
+        "imagefield": "iVBORw0KGgoAAAANSUhEUgAAACIAAAAdCAIAAABACSntAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARISURBVEhLzVZdaBxVFD53dmZ/ku1uVppsNWlD1TwULX1RjIqxMSbmQVLEPogSQSo+lfoi1CdRfBAqgiL6IlTBgFJRFKOYpBprDYI/JdFQK4au2k02a5xs0u7P7MzOXM+5d3Z2k52kC6L4cWdm77n3nO/83J9lnHP496G43+3huE+zaPC8mWg4qTG2bJinUuvH9u3EjjviD5qNnzd/1VMFrlIgrDkaobb/w4vzaXP2ke4DiUi9vAEYtzJ2MTc6sQIRTYqaSRrZeuZcZj4HEAu9fn5VSreGohvm6Jm/oC0MYUW2pmozq+efn81DWAU18N4lg3ObIhGPLwYmF0HVgGFY6CJ52QwNH/48C8EgQ7sK5Ir89HJR6DZmjIhPzGXnVhzQ0HJtwvY0pHbkq3S2qICKPxnpadpL82s06AN2Yb14/LvL0CpLUqUxnG1oqMKT6bWTC2UIB4T3KOHId3rRWDetmpUa+NBEBiJBtydR4TdEt6NhpmOPnNEh7K4WBEVn8r5dWjyoiY4H6hz9JnOpoNQliIPDwTS/HO70oyEVekam0mVbraoJ3x0WVKyP7un0BAI4mU1nLr92vkDrqj5Ko/LK7YmuKEl9wU4u6BOLNtQlgJhL5qmDyR0YykaYTmUEl0kkROUjFpoLJvTtCojt7LsEGGRLxpGZVYhQ3WvelfloT+TQ7pjblacPGWQPTi/lbQ0UYR1f2BzsmZ/e10WSrVba0FQGAkFh3+XgNm8P2W/1XSu7BDnC4O2F1fGUBSFPhGBgmB/0d7QG0FFyx4fmubnlH3UQK9gDR7WPB5L19ZU29ZL56Nc6tOLsKgd+TfuhvaFDe+JAJxnJ62ko5F/Wis/+gBs+IEUCHEr20weit7VHXUEdhr9YwrgZ7agqjc3jIfudfpGuqnxzNH0TixDCc0JkmcChAj1x/sItmC4prN0IJ35a+T5rg1YlQOAUw/qsP1ljFUAaHJGNPTGT/rOkAu1F0TBkroBlTg25lRRw9S+sl45/m8Mz2HWJ3hzKlSdvaulN7pB9D1407Oxy/o2fDbHwJSs2BoXyq72J7mhIaEkCl+a3K2VwMLfoStViBfbG+Mu911XVa0CjUo0PTmagRW6I6gzLuatLPSoWfl0aXQx2xtqiQle6iuOWNXmv4OAo9wIgyA67f+qPMuDCl5RCyPEgN8cHvHS5QXgIMOXwnhCePWiU4jGsF2+N3RgTN97mucLiWGr1k98rgCc9AUsi7om8+X5/e0xTazlpwLF9CahUyHXLuTOpPHVzhxA3kCBNDm+66RVxdHvDuLmch3siD3QnRFA+ahL7r2m5Pq6AjRm1xgd3u1I/KI/PLIGlQtnCqPGko1ay46o1dlCcj36u1eOxnijohXfv3tkW3LCfN4GlrhizuhEUF4qEacMd7eGOlo3XxhbAy+JspjDQGaPcbh03Vk/e2I3AklwllDpcZfL/6l/nP8Z/QgPwN19snj0qruAoAAAAAElFTkSuQmCC"
+    },
+    "qrCodeFields" : {
+        "qrstring":"This is string qr code",
+        "qrnumber":"888",
+        "qrfloat":"888.88",
+        "qrdate":"2022-03-19 11:11:11"
+    },
+	"dataTables": {
+        "TableA" : [
+            {
+                "tablestring":"row 1",
+                "tablenumber":"111",
+                "tablefloat":"111.11",
+                "tabledate":"2022-03-20 12:12:12"
+            },
+            {
+                "tablestring":"row 2",
+                "tablenumber":"222",
+                "tablefloat":"222.77",
+                "tabledate":"2022-03-20 11:11:11"
+            }
+        ]
+    }    
+}
+
+## "image": "iVBORw0KGgoAAAANSUhEUgAAACIAAAAdCAIAAABACSntAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARISURBVEhLzVZdaBxVFD53dmZ/ku1uVppsNWlD1TwULX1RjIqxMSbmQVLEPogSQSo+lfoi1CdRfBAqgiL6IlTBgFJRFKOYpBprDYI/JdFQK4au2k02a5xs0u7P7MzOXM+5d3Z2k52kC6L4cWdm77n3nO/83J9lnHP496G43+3huE+zaPC8mWg4qTG2bJinUuvH9u3EjjviD5qNnzd/1VMFrlIgrDkaobb/w4vzaXP2ke4DiUi9vAEYtzJ2MTc6sQIRTYqaSRrZeuZcZj4HEAu9fn5VSreGohvm6Jm/oC0MYUW2pmozq+efn81DWAU18N4lg3ObIhGPLwYmF0HVgGFY6CJ52QwNH/48C8EgQ7sK5Ir89HJR6DZmjIhPzGXnVhzQ0HJtwvY0pHbkq3S2qICKPxnpadpL82s06AN2Yb14/LvL0CpLUqUxnG1oqMKT6bWTC2UIB4T3KOHId3rRWDetmpUa+NBEBiJBtydR4TdEt6NhpmOPnNEh7K4WBEVn8r5dWjyoiY4H6hz9JnOpoNQliIPDwTS/HO70oyEVekam0mVbraoJ3x0WVKyP7un0BAI4mU1nLr92vkDrqj5Ko/LK7YmuKEl9wU4u6BOLNtQlgJhL5qmDyR0YykaYTmUEl0kkROUjFpoLJvTtCojt7LsEGGRLxpGZVYhQ3WvelfloT+TQ7pjblacPGWQPTi/lbQ0UYR1f2BzsmZ/e10WSrVba0FQGAkFh3+XgNm8P2W/1XSu7BDnC4O2F1fGUBSFPhGBgmB/0d7QG0FFyx4fmubnlH3UQK9gDR7WPB5L19ZU29ZL56Nc6tOLsKgd+TfuhvaFDe+JAJxnJ62ko5F/Wis/+gBs+IEUCHEr20weit7VHXUEdhr9YwrgZ7agqjc3jIfudfpGuqnxzNH0TixDCc0JkmcChAj1x/sItmC4prN0IJ35a+T5rg1YlQOAUw/qsP1ljFUAaHJGNPTGT/rOkAu1F0TBkroBlTg25lRRw9S+sl45/m8Mz2HWJ3hzKlSdvaulN7pB9D1407Oxy/o2fDbHwJSs2BoXyq72J7mhIaEkCl+a3K2VwMLfoStViBfbG+Mu911XVa0CjUo0PTmagRW6I6gzLuatLPSoWfl0aXQx2xtqiQle6iuOWNXmv4OAo9wIgyA67f+qPMuDCl5RCyPEgN8cHvHS5QXgIMOXwnhCePWiU4jGsF2+N3RgTN97mucLiWGr1k98rgCc9AUsi7om8+X5/e0xTazlpwLF9CahUyHXLuTOpPHVzhxA3kCBNDm+66RVxdHvDuLmch3siD3QnRFA+ahL7r2m5Pq6AjRm1xgd3u1I/KI/PLIGlQtnCqPGko1ay46o1dlCcj36u1eOxnijohXfv3tkW3LCfN4GlrhizuhEUF4qEacMd7eGOlo3XxhbAy+JspjDQGaPcbh03Vk/e2I3AklwllDpcZfL/6l/nP8Z/QgPwN19snj0qruAoAAAAAElFTkSuQmCC",
+          
+###
+GET http://localhost:8800/code/generate/mergefields

@@ -34,8 +34,9 @@ public class AppsConfig {
     private Crypto crypto;
     @Autowired
     private EntityManager em;
-    @Autowired
-    private Util util;
+   
+   // @Autowired
+   // private Util util;
 
     private Map<String, Object> appConfig ;
     private ScConfig ScConfig ;
@@ -74,7 +75,7 @@ public class AppsConfig {
                         boolean value  = false;
                         if (cfg.getConfigValue().equalsIgnoreCase("true")) {
                             value = true ;
-                        };
+                        }
                         appConfig.put(cfg.getConfigKey(), value );
                         break;
                     case "D" : 
@@ -196,7 +197,7 @@ public class AppsConfig {
         Timestamp now = new Timestamp(new Date().getTime());
 
         ScConfig = new ScConfig();
-        ScConfig.setConfigId(util.generateID());
+        ScConfig.setConfigId(Util.generateID());
         ScConfig.setConfigKey("crypto.serversecret");          //server AES key
         ScConfig.setConfigValue(crypto.randString(32));    
         ScConfig.setConfigType("S");
@@ -207,7 +208,7 @@ public class AppsConfig {
         configRepo.save(ScConfig);
 
         ScConfig = new ScConfig();
-        ScConfig.setConfigId(util.generateID());
+        ScConfig.setConfigId(Util.generateID());
         ScConfig.setConfigKey("crypto.jwttoken");              //JWT Signing key
         ScConfig.setConfigValue(crypto.randString(64));
         ScConfig.setConfigType("S");
@@ -218,7 +219,7 @@ public class AppsConfig {
         configRepo.save(ScConfig);
 
         ScConfig = new ScConfig();
-        ScConfig.setConfigId(util.generateID());
+        ScConfig.setConfigId(Util.generateID());
         ScConfig.setConfigKey("crypto.jwtversion");            //JWT Version
         ScConfig.setConfigValue("1.0");
         ScConfig.setConfigType("S");
@@ -229,7 +230,7 @@ public class AppsConfig {
         configRepo.save(ScConfig);
 
         ScConfig = new ScConfig();
-        ScConfig.setConfigId(util.generateID());
+        ScConfig.setConfigId(Util.generateID());
         ScConfig.setConfigKey("crypto.jwtissuer");             //JWT Issuer
         ScConfig.setConfigValue("WebSoft");
         ScConfig.setConfigType("S");
@@ -240,7 +241,7 @@ public class AppsConfig {
         configRepo.save(ScConfig);
 
         ScConfig = new ScConfig();
-        ScConfig.setConfigId(util.generateID());
+        ScConfig.setConfigId(Util.generateID());
         ScConfig.setConfigKey("crypto.jwtduration");           //Valdity duration for JWT token
         ScConfig.setConfigValue("900000");
         ScConfig.setConfigType("N");
@@ -253,7 +254,7 @@ public class AppsConfig {
         try {
             Map<String, Object> rsaKeys = crypto.generateRSAKeyPair() ;
             ScConfig = new ScConfig();
-            ScConfig.setConfigId(util.generateID());
+            ScConfig.setConfigId(Util.generateID());
             ScConfig.setConfigKey("crypto.public");
             ScConfig.setConfigValue((String)rsaKeys.get("Base64PublicKey"));   //Server public RSA key
             ScConfig.setConfigType("S");
@@ -264,7 +265,7 @@ public class AppsConfig {
             configRepo.save(ScConfig);
             
             ScConfig = new ScConfig();
-            ScConfig.setConfigId(util.generateID());
+            ScConfig.setConfigId(Util.generateID());
             ScConfig.setConfigKey("crypto.private");
             ScConfig.setConfigValue((String)rsaKeys.get("Base64PrivateKey"));  //Server private RSA key
             ScConfig.setConfigType("S");
@@ -279,7 +280,7 @@ public class AppsConfig {
 
         // Client side encryption required ?
         ScConfig = new ScConfig();
-        ScConfig.setConfigId(util.generateID());
+        ScConfig.setConfigId(Util.generateID());
         ScConfig.setConfigKey("accessManagementController.ClientEncryptionOption");          //server AES key
         ScConfig.setConfigValue("true");    
         ScConfig.setConfigType("B");
@@ -291,7 +292,7 @@ public class AppsConfig {
 
         // client permissible idle time and session timeout after idle time
         ScConfig = new ScConfig();
-        ScConfig.setConfigId(util.generateID());
+        ScConfig.setConfigId(Util.generateID());
         ScConfig.setConfigKey("accessManagementController.idleTime");          //server AES key
         ScConfig.setConfigValue("3");  //set to 3 minutes    
         ScConfig.setConfigType("N");
@@ -302,7 +303,7 @@ public class AppsConfig {
         configRepo.save(ScConfig);
 
         ScConfig = new ScConfig();
-        ScConfig.setConfigId(util.generateID());
+        ScConfig.setConfigId(Util.generateID());
         ScConfig.setConfigKey("accessManagementController.timeout");         
         ScConfig.setConfigValue("1");   //1 minute from idle time if there is no activity.   
         ScConfig.setConfigType("N");
@@ -314,7 +315,7 @@ public class AppsConfig {
 
         //server side encryption required ?  
         ScConfig = new ScConfig();
-        ScConfig.setConfigId(util.generateID());
+        ScConfig.setConfigId(Util.generateID());
         ScConfig.setConfigKey("transmogrifier.securedata");          
         ScConfig.setConfigValue("true");    
         ScConfig.setConfigType("B");
