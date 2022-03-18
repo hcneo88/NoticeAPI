@@ -98,6 +98,7 @@ public class NoticeAPI {
     int tableFieldErrorsCount ;
     //private static final Logger log = LoggerFactory.getLogger(NoticeAPI.class);
 
+    
 
     NoticeAPI() throws Exception {
         //docxAPI = new DocXAPI() ;
@@ -106,13 +107,18 @@ public class NoticeAPI {
         letterHeadPath = templatePath + "/letterhead"  ;
         signatoryPath = templatePath + "/signatory" ;
         docPath = NoticeAPI.class.getResource("/instances").toURI().getPath(); 
-        generatedProgramPath = NoticeAPI.class.getResource("/generatedProgram").toURI().getPath();  
+       // generatedProgramPath = NoticeAPI.class.getResource("/generatedProgram").toURI().getPath();
+        generatedProgramPath = System.getProperty("user.dir") + "/src/main/java/org/eservice/notice/component/mockup" ; 
 
         mergeFieldErrors = new ArrayList<>();
         tableFieldErrors = new ArrayList<>();
 
         mergeFieldErrorsCount = 0 ;
         tableFieldErrorsCount = 0 ;
+    }
+
+    public String getGeneratedProgramPath() {
+        return generatedProgramPath ;
     }
 
     public DocXAPI getDocxAPI() {
