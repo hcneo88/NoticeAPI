@@ -121,6 +121,10 @@ public class NoticeAPI {
         return generatedProgramPath ;
     }
 
+    public String getImagePath() {
+        return templatePath + "/images" ;
+    }
+
     public DocXAPI getDocxAPI() {
         return this.docxAPI ;
     }
@@ -135,13 +139,13 @@ public class NoticeAPI {
 
     public ImageField createImageField(String imagePath) throws Exception {
 
-        byte[] imageByte = null;
+        ImageField imageField ;
         try {
-            imageByte = docxAPI.loadImage(imagePath) ;
+            imageField = DocXAPI.createImageField(imagePath) ;
         } catch (Exception e) {
             throw new NoticeAPIException(e, ErrorMessage.E1020 + imagePath) ;
         }
-        return DocXAPI.createImageField(imageByte);
+        return imageField;
    }
 
     //1st API to be called.
@@ -414,8 +418,10 @@ public class NoticeAPI {
                         }
                         if (Boolean.TRUE.equals(isValidQR)) {
                             //byte[] qrImage = DocXAPI.createQRCode(qrString, 50, 50) ;
-                            MatrixToImageConfig matrixConfig = new MatrixToImageConfig(DocXAPI.Colors.WHITE.getArgb(), DocXAPI.Colors.ORANGE.getArgb());
+                           // MatrixToImageConfig matrixConfig = new MatrixToImageConfig(DocXAPI.Colors.WHITE.getArgb(), DocXAPI.Colors.ORANGE.getArgb());
+                            MatrixToImageConfig matrixConfig = DocXAPI.qrConfigureColor(DocXAPI.Colors.WHITE, DocXAPI.Colors.BLACK);
                             imgFields.put(noticeField.getFieldName(), DocXAPI.createImageField(qrCode.generateQrCode(matrixConfig)));
+                            //imgFields.put(noticeField.getFieldName(), DocXAPI.createImageField(qrCode.generateQrCode(null)));
                         }
                     } 
                 } //QR code
@@ -450,7 +456,6 @@ public class NoticeAPI {
         try {
 
             Date instanceDate = new SimpleDateFormat("yyyy-MM-dd").parse(this.recipientAddress.getTransactionDate()); 
-            System.out.println("DATE:" + instanceDate) ;
             Timestamp instanceTimestamp = new Timestamp(instanceDate.getTime()) ;
             
             dbNoticeInstances.setInstanceId(this.getRecipientAddress().getTransactionId()) ;   //Auto created during createNotice API calls
@@ -484,7 +489,7 @@ public class NoticeAPI {
             Timestamp now = new Timestamp(new Date().getTime()) ;
             dbNoticeInstances.setCreatedDate(now);
             dbNoticeInstances.setUpdatedDate(now); 
-
+            
             noticeInstancesRepo.save(dbNoticeInstances) ;
         
         } catch (Exception e) {
