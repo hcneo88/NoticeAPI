@@ -35,6 +35,7 @@ import org.eservice.notice.repository.NoticeInstancesRepository;
 import org.eservice.notice.repository.NoticeRepository;
 import org.eservice.notice.repository.SignatoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import lombok.Data;
@@ -59,6 +60,7 @@ LEGEND : (M) - MUST CALL API
 @Service
 @Slf4j
 @Data
+@Scope("prototype")
 public class NoticeAPI {
 
     private DocXAPI docxAPI ;
