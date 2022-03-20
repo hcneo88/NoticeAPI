@@ -93,14 +93,13 @@ public class NoticeAPI {
     String signatoryPath ;
     String generatedProgramPath ;
 
-    List<String> mergeFieldErrors ;
-    List<String> tableFieldErrors ;
+    List<String> mergeFieldErrors = new ArrayList<>();
+    List<String> tableFieldErrors = new ArrayList<>();
 
-    int mergeFieldErrorsCount ;
-    int tableFieldErrorsCount ;
+    int mergeFieldErrorsCount = 0;
+    int tableFieldErrorsCount = 0 ;
     //private static final Logger log = LoggerFactory.getLogger(NoticeAPI.class);
 
-    
 
     NoticeAPI() throws Exception {
         //docxAPI = new DocXAPI() ;
@@ -117,6 +116,8 @@ public class NoticeAPI {
 
         mergeFieldErrorsCount = 0 ;
         tableFieldErrorsCount = 0 ;
+
+        noticeFields = null;
     }
 
     public String getGeneratedProgramPath() {

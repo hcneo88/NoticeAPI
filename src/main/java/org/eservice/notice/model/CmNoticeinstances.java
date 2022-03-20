@@ -2,11 +2,15 @@ package org.eservice.notice.model;
 
 import java.sql.*;
 import javax.persistence.*;
+
+import org.springframework.context.annotation.Scope;
+
 import lombok.Data;
 
 @Data
 @Entity(name = "org.eservice.notice.model.CmNoticeinstances")
 @Table(name = "CM_NoticeInstances")
+@Scope("prototype")
 public class CmNoticeinstances {
 
   @Id

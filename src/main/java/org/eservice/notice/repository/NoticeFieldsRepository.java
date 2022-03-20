@@ -12,6 +12,10 @@ import org.springframework.data.repository.CrudRepository;
 public interface NoticeFieldsRepository extends CrudRepository <CmNoticefields, String> {
     
     @Query(nativeQuery = true,
-           value = "Select * FROM CM_NoticeFields n WHERE n.notice_id = ?1")
+           value = "SELECT * FROM CM_NoticeFields n WHERE n.notice_id = ?1")
     public List<CmNoticefields> findAllByNoticeId(String noticeId);
+
+    @Query ( nativeQuery = true,
+             value = "SELECT COUNT(*) from CM_NoticeInstances n WHERE n.notice_id = ?1")
+    public long countByNoticeId(String noticeId);
 }

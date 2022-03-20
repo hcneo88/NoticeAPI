@@ -29,6 +29,9 @@ public interface NoticeInstancesRepository extends CrudRepository<CmNoticeinstan
           value = "SELECT * FROM CM_NoticeInstances n WHERE " +
                   "UPPER(n.recipientName) = UPPER(?1) AND  DATE(created_date) <=  ?2 AND DATE(created_date) <= ?3 LIMIT $4")
    public List<CmNoticeinstances> findByRecipientName(String recipientName, Date startDate, Date endDate, int rowLimt);
+
+   
+
 }
 
 
