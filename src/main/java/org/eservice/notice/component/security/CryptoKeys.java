@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public final class CryptoKeys {
+public class CryptoKeys {
 
     CryptoKeys() {}
 

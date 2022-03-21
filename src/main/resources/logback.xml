@@ -23,6 +23,27 @@
 
 	</appender>
 
+	<appender name="PROFILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOGPATH}/profile.log</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} ,%msg%n
+			</Pattern>
+		</encoder>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${LOGPATH}/archived/profile.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+
+	</appender>
+
+
 	<appender name="EXCEPTION"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${LOGPATH}/exceptions.log</file>
@@ -68,5 +89,18 @@
 	<logger name="org.eservice.notice.exceptions.NoticeAPIException" level="ERROR" additivity="false">
     		<appender-ref ref="EXCEPTION"/>
 	</logger>
-	
+
+	<!-- 
+		2 ways to turn on/off 
+		Either (a) To turn on profiling, set level to DEBUG.  To turn off, set to INFO, WARN OR ERROR
+		       (b) in application.properties, set Profile.enabled = true (turn on) or false (turn off) 
+	-->
+	<logger name="org.eservice.notice.aop.Profiler" level="DEBUG" additivity="false">
+    		<appender-ref ref="PROFILE"/>
+	</logger>
+
+<!--
+	TRACE -> DEBUG -> INFO -> WARN ->  ERROR
+-->
+
 </configuration>
