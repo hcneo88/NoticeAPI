@@ -80,7 +80,7 @@ public class NoticeAPI {
     @Autowired  
     Util commonService ;
 
-    CmNoticefields noticeFields; 
+    CmNoticefields dbNoticeFields; 
     CmNotices dbNotice ;
     CmNoticeinstances dbNoticeInstances;
     CmSignatory dbSignatory; 
@@ -102,7 +102,8 @@ public class NoticeAPI {
 
 
     NoticeAPI() throws Exception {
-        //docxAPI = new DocXAPI() ;
+        
+        docxAPI = new DocXAPI() ;
         log.info("DocXAPI version:{}", DocXAPI.apiVersionDate()) ;
         templatePath = NoticeAPI.class.getResource("/templates").toURI().getPath();
         letterHeadPath = templatePath + "/letterhead"  ;
@@ -117,7 +118,7 @@ public class NoticeAPI {
         mergeFieldErrorsCount = 0 ;
         tableFieldErrorsCount = 0 ;
 
-        noticeFields = null;
+        dbNoticeFields = null;
     }
 
     public String getGeneratedProgramPath() {
@@ -130,6 +131,10 @@ public class NoticeAPI {
 
     public DocXAPI getDocxAPI() {
         return this.docxAPI ;
+    }
+
+    public QrCodeField createQrCodeField(String qrText, int width, int height) throws Exception {
+        return  DocXAPI.createQrCodeField(qrText, width, height);
     }
 
     public TextField createTextField(String text) {
@@ -453,7 +458,7 @@ public class NoticeAPI {
 
         String mergeFields = docxAPI.serializeMergeFields() ;
         String headerFooterFields = docxAPI.serializeHeaderFooter() ; // <= WILL BE BLANK when the header/footer is from letterhead  
-        log.debug("Merge fields to be saved to database :{}", mergeFields) ;
+        log.info("Merge fields to be saved to database :{}", mergeFields) ;
 
         dbNoticeInstances = new CmNoticeinstances() ;
         try {

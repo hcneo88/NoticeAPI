@@ -18,7 +18,7 @@ public interface NoticeRepository extends CrudRepository<CmNotices, String> {
    public List<CmNotices> findByNoticeNum(String noticeNum);
 
    @Query(nativeQuery = true, 
-          value = "select * FROM CM_Notices n WHERE n.notice_id= ?1")
+          value = "SELECT * FROM CM_Notices n WHERE n.notice_id= ?1")
    public CmNotices findByNoticeId(String noticeId);
 }
 

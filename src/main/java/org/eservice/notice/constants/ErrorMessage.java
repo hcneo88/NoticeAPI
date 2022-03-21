@@ -18,6 +18,7 @@ public final class ErrorMessage {
 
     //loadFields
     public static final String E1006 = "E1006#No notice instance found for instance id #" ;
+    
     public static final String E1007 = "E1007#Unable to find notice template #" ;
 
     //regenerateNotice
@@ -34,4 +35,5 @@ public final class ErrorMessage {
     //saveFields
     public static final String E1025 = "E1025#Unable to persit merge fields to database." ;
 
+    public static final String E1030= "E1006A#Multiple active notice record found for notice #" ;
 }

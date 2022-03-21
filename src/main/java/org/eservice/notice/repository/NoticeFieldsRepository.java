@@ -15,7 +15,16 @@ public interface NoticeFieldsRepository extends CrudRepository <CmNoticefields, 
            value = "SELECT * FROM CM_NoticeFields n WHERE n.notice_id = ?1")
     public List<CmNoticefields> findAllByNoticeId(String noticeId);
 
-    @Query ( nativeQuery = true,
-             value = "SELECT COUNT(*) from CM_NoticeInstances n WHERE n.notice_id = ?1")
+    @Query (nativeQuery  = true,
+             value = "SELECT COUNT(*) from CM_NoticeFields n WHERE n.notice_id = ?1")
     public long countByNoticeId(String noticeId);
+
+    @Query(nativeQuery = true,
+           value = "SELECT * FROM CM_NoticeFields n where n.notice_id = ?1 AND substring(n.field_type_cd,1,1) <> 'T'") 
+    public List<CmNoticefields> findMergeFieldsByNoticeId(String noticeId) ;       
+
+    @Query(nativeQuery = true,
+           value = "SELECT * FROM CM_NoticeFields n where n.notice_id = ?1 AND substring(n.field_type_cd,1,1) = 'T'") 
+    public List<CmNoticefields> findTableFieldsByNoticeId(String noticeId) ;       
+    
 }

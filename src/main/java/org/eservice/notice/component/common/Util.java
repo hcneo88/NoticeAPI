@@ -7,6 +7,8 @@ import java.util.Random;
 
 import javax.sql.DataSource;
 
+import com.github.javafaker.Faker;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -59,5 +61,35 @@ public class Util {
 
         return String.valueOf(year).concat("-").concat(mString).concat("-").concat(dString) ;
     } 
+
+    public static String generateFakerData(char fieldType) {
+
+        Faker dataFaker = new Faker();
+        int choice = rnd.nextInt(5) ;
+        int number = rnd.nextInt(1000) ;
+
+        if (fieldType == 'N') 
+            return String.valueOf(dataFaker.number().numberBetween(number,number+5000)) ;
+        if (fieldType == 'F') 
+            return String.valueOf(dataFaker.number().randomDouble(2, 100, 1000));
+        if (fieldType == 'D') 
+            return Util.generateRandomDateString().concat(" 10:11:12") ;
+
+        String strValue = "" ;    
+        switch (choice) {
+            case 1  :   strValue = dataFaker.ancient().primordial() ;
+                        break ;
+            case 2  :   strValue = dataFaker.animal().name() ;
+                        break;
+            case 3  :   strValue = dataFaker.app().name() ;
+                        break;
+            case 4  :   strValue = dataFaker.beer().name() ;
+                        break;
+            case 5  :   strValue = dataFaker.book().title() ;
+                        break ;
+            default :   strValue = dataFaker.commerce().productName();
+        }    
+        return strValue ;
+    }
 
 }
