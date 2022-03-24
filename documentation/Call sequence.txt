@@ -1,0 +1,13 @@
+1.	Create & populate RegisterAddress
+2.	Call createNotice API
+3.	Call populateMergeFields, pass in list<String, Object> where Object can be
+	(a) TextField Object
+	(b) ImageField Object
+	(c) QrCodeField Object 
+4.	Call populateTableFields for each row, passing the fields in hashmap of Map<String,String>
+5.	Call allFieldsReady()
+6.	Call dbUploadFields.
+7.	Call generate
+
+
+reference NoticeAPI.GenerateNoticeAPI
