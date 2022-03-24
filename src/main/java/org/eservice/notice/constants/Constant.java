@@ -13,6 +13,8 @@ public class Constant {
 
     public static final int QRCODE_DEFAULTSIZE = 65;
 
+    public static final int DATE_SEARCHRANGE = 120 ;
+
     //public static final String QR_PROP_WIDTH = null; 
 
 }

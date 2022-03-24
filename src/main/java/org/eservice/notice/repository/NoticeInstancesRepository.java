@@ -17,18 +17,18 @@ public interface NoticeInstancesRepository extends CrudRepository<CmNoticeinstan
 
    @Query(nativeQuery = true, 
           value = "SELECT * FROM CM_NoticeInstances n WHERE " +
-                  "n.notice_id = ?1 AND  DATE(created_date) <=  ?2 AND DATE(created_date) <= ?3 LIMIT ?4")
-   public List<CmNoticeinstances> findByNoticeId(String noticeId, Date startDate, Date endDate, int rowLimit);
+                  "n.notice_id = ?1 AND  DATE(created_date) >=  ?2 AND DATE(created_date) <= ?3 LIMIT ?4")
+   public List<CmNoticeinstances> findByNoticeId(String noticeId, String startDate, String endDate, int rowLimit);
 
    @Query(nativeQuery = true, 
           value = "SELECT * FROM CM_NoticeInstances n WHERE " +
-                  "n.notice_num = ?1 AND  DATE(created_date) <=  ?2 AND DATE(created_date) <= ?3 LIMIT ?4")
-   public List<CmNoticeinstances> findByNoticeNum(String noticeNum, Date startDate, Date endDate, int rowLimit);
+                  "n.notice_num = ?1 AND  DATE(created_date) >=  ?2 AND DATE(created_date) <= ?3 LIMIT ?4")
+   public List<CmNoticeinstances> findByNoticeNum(String noticeNum, String startDate, String endDate, int rowLimit);
 
    @Query(nativeQuery = true, 
           value = "SELECT * FROM CM_NoticeInstances n WHERE " +
-                  "UPPER(n.recipientName) = UPPER(?1) AND  DATE(created_date) <=  ?2 AND DATE(created_date) <= ?3 LIMIT $4")
-   public List<CmNoticeinstances> findByRecipientName(String recipientName, Date startDate, Date endDate, int rowLimt);
+                  "UPPER(n.recipient_name) = UPPER(?1) AND  created_date BETWEEN ?2 AND ?3 LIMIT ?4")
+   public List<CmNoticeinstances> findByRecipientName(String recipientName, String startDate, String endDate, int rowLimt);
 
    
 

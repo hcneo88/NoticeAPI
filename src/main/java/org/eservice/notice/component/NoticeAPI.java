@@ -110,7 +110,7 @@ public class NoticeAPI {
         signatoryPath = templatePath + "/signatory" ;
         docPath = NoticeAPI.class.getResource("/instances").toURI().getPath(); 
        // generatedProgramPath = NoticeAPI.class.getResource("/generatedProgram").toURI().getPath();
-        generatedProgramPath = System.getProperty("user.dir") + "/src/main/java/org/eservice/notice/component/mockup" ; 
+        generatedProgramPath = System.getProperty("user.dir") + "/src/main/java/org/eservice/notice/controller/mockup" ; 
 
         mergeFieldErrors = new ArrayList<>();
         tableFieldErrors = new ArrayList<>();
@@ -507,7 +507,7 @@ public class NoticeAPI {
         
     }
 
-    public List<CmNoticeinstances> findNoticeInstances(NoticeQueryEnum queryField, String queryValue, Date startDate, Date endDate ) throws Exception {
+    public List<CmNoticeinstances> findNoticeInstances(NoticeQueryEnum queryField, String queryValue, String startDate, String endDate ) throws Exception {
 
         List<CmNoticeinstances> instances = null ;
         switch (queryField) {

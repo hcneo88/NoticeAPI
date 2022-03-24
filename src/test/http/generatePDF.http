@@ -2,7 +2,7 @@
 # Simple Merge Field Test Case : To verify exception when error fields ("notdefind") or table fields are passed in
 # to template for merge fields not defined in database.  UC0101N001 does not have a table field and 
 # thus contribute to the error list.
-POST http://localhost:8800/notice/generate/pdf
+POST http://localhost:8800/notice/generate/userjson/pdf
 Content-Type: application/json
 
 {
@@ -41,7 +41,7 @@ Content-Type: application/json
 
 ### 
 # Simple MergeField Test Case : Verify that PDF can be generated successfully 
-POST http://localhost:8800/notice/generate/pdf
+POST http://localhost:8800/notice/generate/usejson/pdf
 Content-Type: application/json
 
 {
@@ -152,5 +152,7 @@ GET http://localhost:8800/code/generate/mergefields
 GET http://localhost:8800/notice/generate/static/mockpdf/UC0101N002
 
 ###
-# The following is based on 1 single method ie dynamically constructed the merge and table fields from database 
+# The above 3 steps could be replaced by the following is based on a singular method "generateMockPdf"
+# in GenerateProgramCode.java that dynamically constructed the merge and table fields 
+# from database tables i.e. CM_Notices and CM_NoticeFields. 
 GET http://localhost:8800/notice/generate/dynamic/mockpdf/UC0101N002
