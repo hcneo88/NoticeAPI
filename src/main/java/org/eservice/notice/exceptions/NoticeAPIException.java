@@ -1,7 +1,6 @@
 package org.eservice.notice.exceptions;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.eservice.notice.aop.ProfilerAnnotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

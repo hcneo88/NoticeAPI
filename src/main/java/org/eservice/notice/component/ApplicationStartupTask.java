@@ -27,7 +27,6 @@ public class ApplicationStartupTask implements CommandLineRunner {
     GenerateExistingNoticeTestCase generateExistingNoticeTestCase;
 
     public void run(String... args) throws Exception {
-
         System.setProperty("user.timezone", "Asia/Singapore");
         log.info("*** Start running Self Test ***");
 /*

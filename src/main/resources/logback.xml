@@ -68,14 +68,13 @@
 
 	</appender>
 
-
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-			<Pattern>
-				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{16} - %msg%n
-			</Pattern>
-    </encoder>
-  </appender>
+		<encoder>
+				<Pattern>
+					%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{16} - %msg%n
+				</Pattern>
+		</encoder>
+  	</appender>
 
 	<root level="info">
 		<appender-ref ref="FILE" />
@@ -98,6 +97,9 @@
 	<logger name="org.eservice.notice.aop.Profiler" level="DEBUG" additivity="false">
     		<appender-ref ref="PROFILE"/>
 	</logger>
+
+	
+
 
 <!--
 	TRACE -> DEBUG -> INFO -> WARN ->  ERROR

@@ -15,9 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ConditionalOnExpression("${Profiler.enabled:false}")  //Defined in application.properties to turn on and off
 public class Profiler {
-    // "|| within(@org.springframework.web.bind.annotation.RestController *)"  +
-    // "|| within(@org.eservice.notice.aop.ProfilerAnnotation *)"
-    
+       
     //The "Around" advise for this aspect will be executed when methods defined in classes which are "decorated"
     //by one of these annotations,  are invoked.
     @Pointcut( "within(@org.springframework.stereotype.Repository *)"               +
@@ -33,8 +31,8 @@ public class Profiler {
         long start = System.currentTimeMillis();
         Object result = pjp.proceed();
         long executionTime = System.currentTimeMillis() - start;
+
         log.debug(pjp.getSignature().toString() + "\t" + executionTime);
-        
         return result ;
     }
 }
